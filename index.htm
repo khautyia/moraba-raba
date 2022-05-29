@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="initial-scale=1"/>
+  <title>Nine Men's Morris (by fr34q)</title>
+  <link type="text/css" rel="stylesheet" href="style/nature.css" />
+  <link type="text/css" rel="stylesheet" href="style/mill.css" />
+  <link type="text/css" rel="stylesheet" href="style/menu.css" />
+  <link type="text/css" rel="stylesheet" href="style/game.css" />
+  <script src="mill.js"></script>
+  <!-- preload images of stones so it will not flicker at first display -->
+  <link rel="preload" as="image" href="pictures/background-nature.jpg">
+  <link rel="preload" as="image" href="pictures/white-nature.png">
+  <link rel="preload" as="image" href="pictures/white-moveable-nature.png">
+  <link rel="preload" as="image" href="pictures/white-moveable-hover-nature.png">
+  <link rel="preload" as="image" href="pictures/white-active-nature.png">
+  <link rel="preload" as="image" href="pictures/white-removeable-nature.png">
+  <link rel="preload" as="image" href="pictures/white-removeable-hover-nature.png">
+  <link rel="preload" as="image" href="pictures/black-nature.png">
+  <link rel="preload" as="image" href="pictures/black-moveable-nature.png">
+  <link rel="preload" as="image" href="pictures/black-moveable-hover-nature.png">
+  <link rel="preload" as="image" href="pictures/black-active-nature.png">
+  <link rel="preload" as="image" href="pictures/black-removeable-nature.png">
+  <link rel="preload" as="image" href="pictures/black-removeable-hover-nature.png">
+</head>
+<body onload="onLoad();">
+<header>
+    <table><tr><td>Nine Men's Morris</td>
+    <td><button onclick="Menu.ReturnToMenu();">To Menu</button></td>
+    </tr></table>
+</header>
+
+<div id="background1"></div>
+<div id="background2"></div>
+
+<div id="gameMenu" width="500" height="400">
+    <table>
+        <tr><td colspan="2"> 
+            <button onclick="Menu.StartGame();">Start New Game</button> 
+        </td></tr>
+        <tr><td>    
+            White AI
+        </td><td>
+            <div class="dropdown">
+                <button id="whiteAI" onclick="Menu.ToggleDropdown(this);" class="dropbtn">Human</button>
+                <div class="dropdown-content">
+                    <a onclick="Menu.SetPlayerAI(1,GameAI.Human,this);">Human</a>
+                    <a onclick="Menu.SetPlayerAI(1,GameAI.Random,this);">Random</a>
+                    <a onclick="Menu.SetPlayerAI(1,GameAI.Easy,this);">Easy</a>
+                    <a onclick="Menu.SetPlayerAI(1,GameAI.Medium,this);">Medium</a>
+                    <a onclick="Menu.SetPlayerAI(1,GameAI.Strong,this);">Strong</a>
+                </div>
+            </div>
+        </td></tr>
+        <tr><td>    
+            Black AI
+        </td><td>
+            <div class="dropdown">
+                <button id="blackAI" onclick="Menu.ToggleDropdown(this);" class="dropbtn">Easy</button>
+                <div class="dropdown-content">
+                    <a onclick="Menu.SetPlayerAI(0,GameAI.Human,this);">Human</a>
+                    <a onclick="Menu.SetPlayerAI(0,GameAI.Random,this);">Random</a>
+                    <a onclick="Menu.SetPlayerAI(0,GameAI.Easy,this);">Easy</a>
+                    <a onclick="Menu.SetPlayerAI(0,GameAI.Medium,this);">Medium</a>
+                    <a onclick="Menu.SetPlayerAI(0,GameAI.Strong,this);">Strong</a>
+                </div>
+            </div>
+        </td></tr>
+        <tr><td colspan="2" style="text-align:left;">
+            <label class="switch" tabindex="0">
+                <input type="checkbox" id="statMode" onchange="Menu.ReadSettings();">
+                <div class="slider"></div>
+            </label> Stat Mode
+        </td></tr>
+        <tr><td colspan="2" style="text-align:left;">
+            <label class="switch" tabindex="0">
+                <input type="checkbox" id="classicDesign" onchange="Menu.ReadSettings();">
+                <div class="slider"></div>
+            </label> Classic Design
+        </td></tr>
+    </table>
+    <div id="infoOverlay" onclick="Menu.HideInfoOverlay();"><div>
+        <span>Information</span>
+        <p>Text goes here.</p>
+        (Click to go back to menu.)
+    </div></div>
+</div>
+
+
+<div id="gameBoard"> <!-- game board -->
+    <!-- Create lines of board -->
+    <div class="fieldLineHorizontal" style="width: 60vmin; transform: translate(-30vmin,-30vmin);"></div>
+    <div class="fieldLineHorizontal" style="width: 40vmin; transform: translate(-20vmin,-20vmin);"></div>
+    <div class="fieldLineHorizontal" style="width: 20vmin; transform: translate(-10vmin,-10vmin);"></div>
+     <!-- newly added lines of board -->
+    <div class="fieldLineHorizontal" style="width: 20vmin; transform: translate(-10vmin,0vmin);"></div>
+     <!-- Create lines of board -->
+    <div class="fieldLineHorizontal" style="width: 20vmin; transform: translate(-30vmin,  0vmin);"></div>
+    <div class="fieldLineHorizontal" style="width: 20vmin; transform: translate( 10vmin,  0vmin);"></div>
+    <div class="fieldLineHorizontal" style="width: 20vmin; transform: translate(-10vmin, 10vmin);"></div>
+    <div class="fieldLineHorizontal" style="width: 40vmin; transform: translate(-20vmin, 20vmin);"></div>
+    <div class="fieldLineHorizontal" style="width: 60vmin; transform: translate(-30vmin, 30vmin);"></div>
+    <div class="fieldLineVertical" style="height: 60vmin; transform: translate(-30vmin,-30vmin);"></div>
+    <div class="fieldLineVertical" style="height: 40vmin; transform: translate(-20vmin,-20vmin);"></div>
+    <!-- Create lines of board -->
+    <div class="fieldLineVertical" style="height: 20vmin; transform: translate(-0vmin,-10vmin);"></div>
+    <!-- Create lines of board -->
+    <div class="fieldLineVertical" style="height: 20vmin; transform: translate(-10vmin,-10vmin);"></div>
+    <div class="fieldLineVertical" style="height: 20vmin; transform: translate(  0vmin,-30vmin);"></div>
+    <div class="fieldLineVertical" style="height: 20vmin; transform: translate(  0vmin, 10vmin);"></div>
+    <div class="fieldLineVertical" style="height: 20vmin; transform: translate( 10vmin,-10vmin);"></div>
+    <div class="fieldLineVertical" style="height: 40vmin; transform: translate( 20vmin,-20vmin);"></div>
+    <div class="fieldLineVertical" style="height: 60vmin; transform: translate( 30vmin,-30vmin);"></div>
+
+    <!-- diagonal lines -->
+    <div class="fieldLineDiagonal" id="custom-bottom-right" style=" -moz-transform: rotate(45deg); -webkit-transform: rotate(45deg); -o-transform: rotate(45deg); -ms-transform: rotate(45deg);"></div>
+    <div class="fieldLineDiagonal" id="custom-bottom-left" style=" -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -o-transform: rotate(-45deg); -ms-transform: rotate(-45deg);"></div>
+    <div class="fieldLineDiagonal" id="custom-top-left" style=" -moz-transform: rotate(45deg); -webkit-transform: rotate(45deg); -o-transform: rotate(45deg); -ms-transform: rotate(45deg);"></div>
+    <div class="fieldLineDiagonal" id="custom-top-right" style=" -moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -o-transform: rotate(-45deg); -ms-transform: rotate(45deg);"></div>
+
+    <div id="winnerScreen" onclick="Menu.ReturnToMenu();"><div>
+        <span id="winnerScreenText">White wins!</span>
+        <br>
+        (Click anywhere to go to menu.)
+    </div></div>
+</div>
+
+
+<footer>
+    <p>© 2016 by A*</p>
+</footer>
+</body>
+</html>
